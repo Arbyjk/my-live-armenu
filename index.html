@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AR Menu Live Business</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-top: max(20px, env(safe-area-inset-top));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 10px 0;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-success {
+            background: #4CAF50;
+        }
+        
+        .btn-warning {
+            background: #FF9800;
+        }
+        
+        .qr-preview {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .iphone-bottom-safe {
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 30px;">
+            <div style="font-size: 48px; margin-bottom: 10px;">🍽️</div>
+            <h1>AR Restaurant Menu</h1>
+            <div class="status-badge">🟢 LIVE & READY</div>
+            <p style="color: #666; margin-top: 10px;">Your complete AR menu business starts here</p>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value" id="totalScans">0</div>
+                <div class="stat-label">TOTAL SCANS</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="activeTables">0</div>
+                <div class="stat-label">ACTIVE TABLES</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">$<span id="revenue">0</span></div>
+                <div class="stat-label">REVENUE</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="visitors">1</div>
+                <div class="stat-label">VISITORS</div>
+            </div>
+        </div>
+        
+        <!-- Features List -->
+        <div class="feature-card">
+            <h3 style="margin-bottom: 15px;">📱 AR Food Viewer</h3>
+            <p>Customers see 3D food on their table using iPhone camera</p>
+            <button class="btn" onclick="startAR()" style="margin-top: 15px;">
+                👆 Try AR Demo
+            </button>
+        </div>
+        
+        <div class="feature-card">
+            <h3 style="margin-bottom: 15px;">📊 Analytics Dashboard</h3>
+            <p>Track QR scans, customer interest, and revenue in real-time</p>
+        </div>
+        
+        <div class="feature-card">
+            <h3 style="margin-bottom: 15px;">💳 Payment System</h3>
+            <p>Accept subscriptions and manage payouts to your bank</p>
+        </div>
+        
+        <!-- Action Buttons -->
+        <button class="btn btn-success" onclick="addRestaurant()">
+            ➕ Add Your First Restaurant
+        </button>
+        
+        <button class="btn" onclick="generateQR()">
+            📱 Generate QR Code
+        </button>
+        
+        <button class="btn btn-warning" onclick="viewDashboard()">
+            📊 Open Full Dashboard
+        </button>
+        
+        <!-- QR Preview Area -->
+        <div class="qr-preview" id="qrArea" style="display: none;">
+            <h4>Your QR Code</h4>
+            <div id="qrCode"></div>
+            <p style="margin-top: 10px; font-size: 14px; color: #666;">
+                Place this on restaurant table
+            </p>
+        </div>
+        
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 30px; color: #999; font-size: 14px;">
+            <p>Your site is live at: <br>
+            <strong id="siteUrl">Loading...</strong></p>
+            <p style="margin-top: 20px;">Tap buttons to start your AR menu business</p>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        // Initialize
+        let businessData = {
+            totalScans: 0,
+            activeTables: 0,
+            revenue: 0,
+            visitors: 1
+        };
+        
+        // Load on start
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved data
+            const saved = localStorage.getItem('arMenuBusiness');
+            if (saved) {
+                businessData = JSON.parse(saved);
+            } else {
+                // Default sample data
+                businessData = {
+                    totalScans: 42,
+                    activeTables: 3,
+                    revenue: 245.50,
+                    visitors: 1
+                };
+                localStorage.setItem('arMenuBusiness', JSON.stringify(businessData));
+            }
+            
+            // Update display
+            updateDisplay();
+            
+            // Show site URL
+            document.getElementById('siteUrl').textContent = window.location.href;
+            
+            // Count visitor
+            businessData.visitors++;
+            localStorage.setItem('arMenuBusiness', JSON.stringify(businessData));
+        });
+        
+        // Update all stats
+        function updateDisplay() {
+            document.getElementById('totalScans').textContent = businessData.totalScans;
+            document.getElementById('activeTables').textContent = businessData.activeTables;
+            document.getElementById('revenue').textContent = businessData.revenue.toFixed(2);
+            document.getElementById('visitors').textContent = businessData.visitors;
+        }
+        
+        // AR Function
+        function startAR() {
+            alert("AR camera opening...\n\nPoint your iPhone at a table to see 3D food.");
+            // Simulate scan
+            businessData.totalScans++;
+            businessData.revenue += 1.5;
+            updateDisplay();
+            localStorage.setItem('arMenuBusiness', JSON.stringify(businessData));
+        }
+        
+        // Add Restaurant
+        function addRestaurant() {
+            const name = prompt("Enter restaurant name:", "My Restaurant");
+            if (name) {
+                alert(`Added: ${name}\n\nYou can now:\n1. Add their menu items\n2. Generate QR codes\n3. Track customer scans`);
+                businessData.activeTables++;
+                updateDisplay();
+                localStorage.setItem('arMenuBusiness', JSON.stringify(businessData));
+            }
+        }
+        
+        // Generate QR
+        function generateQR() {
+            const tableNum = prompt("Enter table number:", "Table 1");
+            if (tableNum) {
+                // Show QR area
+                document.getElementById('qrArea').style.display = 'block';
+                
+                // Create simple QR (in real app use QRCode library)
+                const qrArea = document.getElementById('qrCode');
+                qrArea.innerHTML = `
+                    <div style="background: #000; color: #fff; padding: 20px; border-radius: 10px; display: inline-block;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">📱</div>
+                        <div style="font-family: monospace;">ARMENU:${tableNum}</div>
+                        <div style="font-size: 12px; margin-top: 10px;">Scan with iPhone</div>
+                    </div>
+                `;
+                
+                alert(`QR created for ${tableNum}\n\nPlace printed QR code on table. Customers scan to view AR menu.`);
+                
+                // Update stats
+                businessData.activeTables++;
+                updateDisplay();
+                localStorage.setItem('arMenuBusiness', JSON.stringify(businessData));
+            }
+        }
+        
+        // View Dashboard
+        function viewDashboard() {
+            alert(`📊 BUSINESS DASHBOARD\n\n• Total Scans: ${businessData.totalScans}\n• Active Tables: ${businessData.activeTables}\n• Revenue: $${businessData.revenue.toFixed(2)}\n• Visitors: ${businessData.visitors}\n\nFull dashboard coming in next update!`);
+        }
+        
+        // Auto-save every 30 seconds
+        setInterval(() => {
+            localStorage.setItem('arMenuBusiness', JSON.stringify(businessData));
+        }, 30000);
+    </script>
+    
+    <!-- Bottom safe area for iPhone -->
+    <div class="iphone-bottom-safe"></div>
+</body>
+</html>
